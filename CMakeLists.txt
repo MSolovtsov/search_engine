@@ -13,6 +13,8 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)]]
 
 
-add_executable(search_engine main.cpp)
+set(MY_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/)
+
+add_subdirectory(src)
 
 target_link_libraries(search_engine PRIVATE nlohmann_json::nlohmann_json)
