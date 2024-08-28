@@ -7,11 +7,6 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 
 add_subdirectory(nlohmann_json)
 
-#[[include(FetchContent)
-
-FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
-FetchContent_MakeAvailable(json)]]
-
 
 set(MY_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/)
 
