@@ -16,13 +16,13 @@
 class ConverterJSON {
 private:
     /* Функция проверяет корректность config.json файла */
-    static bool CheckConfig(nlohmann::json configJson);
+    static bool CheckConfig(const nlohmann::json& configJson);
 
     /* Функция проверяет корректность requests.json файла */
-    static bool CheckRequests(nlohmann::json requestsJson);
+    static bool CheckRequests(const nlohmann::json& requestsJson);
 
     /* Функция проверяет корректность answers.json файла */
-    static bool CheckAnswers(nlohmann::json answersJson);
+    static bool CheckAnswers(const nlohmann::json& answersJson);
 
     /* Метод считывает json из файла
      * @return Возвращает объект json */
@@ -46,7 +46,7 @@ public:
     static std::vector<std::string> GetRequests();
 
     /* Положить в файл answers.json результаты поисковых запросов */
-    void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
+    static void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
 
 };
 

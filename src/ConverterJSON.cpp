@@ -5,7 +5,7 @@
 #include "ConverterJSON.h"
 
 /* Функция проверяет корректность config.json файла */
-bool ConverterJSON::CheckConfig(nlohmann::json configJson){
+bool ConverterJSON::CheckConfig(const nlohmann::json& configJson){
     /* Существует ли поле "config" */
     if (configJson["config"] == nullptr) {
         //TODO Сделать ошибкой
@@ -23,7 +23,7 @@ bool ConverterJSON::CheckConfig(nlohmann::json configJson){
 }
 
 /* Функция проверяет корректность requests.json файла */
-bool ConverterJSON::CheckRequests(nlohmann::json requestsJson){
+bool ConverterJSON::CheckRequests(const nlohmann::json& requestsJson){
 
     /// CODE
 
@@ -31,7 +31,7 @@ bool ConverterJSON::CheckRequests(nlohmann::json requestsJson){
 }
 
 /* Функция проверяет корректность answers.json файла */
-bool ConverterJSON::CheckAnswers(nlohmann::json answersJson){
+bool ConverterJSON::CheckAnswers(const nlohmann::json& answersJson){
 
     /// CODE
 
@@ -62,10 +62,9 @@ nlohmann::json ConverterJSON::CorrectOpenJson(bool is_config, bool is_requests){
 
     auto isCorrect = (is_config) ?
                      (CheckConfig(fileJson)) : ((is_requests) ?
-                                                CheckRequests(fileJson) : CheckRequests(fileJson));
+                                                CheckRequests(fileJson) : CheckAnswers(fileJson));
     if (!isCorrect) fileJson = nullptr;
 
-    //TODO Если нет ошибок!!!!
     return fileJson;
 }
 
@@ -81,7 +80,7 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
         for (auto &i: configFileJson["files"]) {
             std::ifstream textFile;
             //TODO Исправить костыль!!
-            textFile.open(/*"..\\" + */i);
+            textFile.open(i);
             if (textFile.is_open()) {
                 std::string text;
                 std::getline(textFile, text);
@@ -103,16 +102,36 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
 * количества ответов на один запрос
 * @return */
 int ConverterJSON::GetResponsesLimit() {
-    return 0;
+    nlohmann::json configFileJson = CorrectOpenJson(true, false);
+    if (configFileJson != nullptr){
+        int count = configFileJson["config"]["max_responses"];
+        return count;
+    } else
+        return 0;
 }
 
 /* Метод получения запросов из файла requests.json
 * @return возвращает список запросов из файла requests.json */
 std::vector<std::string> ConverterJSON::GetRequests() {
-    return std::vector<std::string>();
+    nlohmann::json requestsFileJson = CorrectOpenJson(false, true);
+    std::vector<std::string> keywords;
+
+    if (requestsFileJson != nullptr){
+        for (int i = 0; i < requestsFileJson["requests"].size(); i++){
+            keywords.push_back(requestsFileJson["requests"][i]);
+        }
+    } else {
+        //TODO Исправить костыль!!
+        std::cout << "PUPUPU" << std::endl;
+        keywords.clear();
+    }
+
+    return keywords;
 }
 
 /* Положить в файл answers.json результаты поисковых запросов */
 void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
 
+    /// CODE
 }
+
