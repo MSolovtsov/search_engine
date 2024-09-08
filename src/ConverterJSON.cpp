@@ -69,8 +69,7 @@ nlohmann::json ConverterJSON::CorrectOpenJson(bool is_config, bool is_requests){
 }
 
 /* Метод получения содержимого файлов
-* @return Возвращает список с содержимым файлов перечисленных
-* в config.json */
+* @return Возвращает список с содержимым файлов перечисленных в config.json */
 std::vector<std::string> ConverterJSON::GetTextDocuments() {
 
     nlohmann::json configFileJson = CorrectOpenJson(true, false);
@@ -117,8 +116,8 @@ std::vector<std::string> ConverterJSON::GetRequests() {
     std::vector<std::string> keywords;
 
     if (requestsFileJson != nullptr){
-        for (int i = 0; i < requestsFileJson["requests"].size(); i++){
-            keywords.push_back(requestsFileJson["requests"][i]);
+        for (auto & i : requestsFileJson["requests"]){
+            keywords.push_back(i);
         }
     } else {
         //TODO Исправить костыль!!
@@ -130,8 +129,13 @@ std::vector<std::string> ConverterJSON::GetRequests() {
 }
 
 /* Положить в файл answers.json результаты поисковых запросов */
-void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
+void ConverterJSON::putAnswers(const std::vector<std::vector<std::pair<int, float>>>& answers) {
 
     /// CODE
+
+    /*Тз: При этом каждый документ содержит не более
+            1000 слов с максимальной длиной каждого в 100 символов. Слова
+            состоят из строчных латинских букв и разделены одним или несколькими
+            пробелами*/
 }
 
