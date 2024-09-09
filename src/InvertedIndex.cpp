@@ -14,9 +14,9 @@ void InvertedIndex::UpdateDocumentBase(const std::vector<std::string>& input_doc
     }
 
     //-------------- проверка
-    for (auto & doc : docs){
+    /*for (auto & doc : docs){
         std::cout << doc << std::endl;
-    }
+    }*/
 }
 
 /* Метод определяет количество вхождений слова word в загруженной базе документов
@@ -24,7 +24,7 @@ void InvertedIndex::UpdateDocumentBase(const std::vector<std::string>& input_doc
 * @return возвращает подготовленный список с частотой слов*/
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string &word) {
     std::vector<Entry> entry_vec;
-    const int count = word.size();
+    const auto count = word.size();
 
     // Проверяем каждый текст
     for (int i = 0; i < docs.size(); i++){
@@ -35,7 +35,9 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string &word) {
 
         // Проверяем внутри текста
         for (int j = 0; j <= docs[i].size(); j++){
-            /* Тз: При этом каждый документ содержит не более
+           /* Вариант 1
+            *
+            * *//* Тз: При этом каждый документ содержит не более
             * 1000 слов с максимальной длиной каждого в 100 символов. Слова
             * состоят из строчных латинских букв и разделены одним или несколькими
             * пробелами */
@@ -47,10 +49,20 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string &word) {
                         entry.count++;
                 buf.clear();
             }
+
+            // Вариант 2
+            /*int count = 0;
+            for (int idx = 0; idx < word.size(); idx++){
+                count++;
+                if (docs[i][j+idx] != word[idx])
+                    break;
+            }
+            if (count == word.size())
+                entry.count++;*/
         }
 
         if (entry.count != 0) {
-            entry.doc_id = i + 1;
+            entry.doc_id = i;
             entry_vec.push_back(entry);
         }
     }
