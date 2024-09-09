@@ -1,22 +1,22 @@
 cmake_minimum_required(VERSION 3.23)
 
-include(FetchContent)
-FetchContent_Declare(
-        googletest
-        URL
-        https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-)
-
-set(gtest_disable_pthreads on)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-FetchContent_MakeAvailable(googletest)
 
 enable_testing()
+add_subdirectory(googletest)
 
-add_subdirectory(testConverterJSON)
 
-target_link_libraries(search_engine PRIVATE gtest_main)
+add_executable(search_engine_test
+        test_InvertedIndex.cpp
+        ${MY_SRC_DIR}InvertedIndex.cpp
+        ${MY_INCLUDE_DIR}InvertedIndex.h)
+
+include_directories(${MY_INCLUDE_DIR})
+include_directories(${MY_SRC_DIR})
+
+target_include_directories(search_engine_test PUBLIC ${MY_INCLUDE_DIR})
+target_include_directories(search_engine_test PUBLIC ${MY_SRC_DIR})
+
+target_link_libraries(search_engine_test PRIVATE gtest_main)
 
 include(GoogleTest)
-#gtest_discover_tests(search_engine)
+gtest_discover_tests(search_engine_test)
