@@ -4,8 +4,9 @@
 
 #ifndef SEARCH_ENGINE_CONVERTERJSON_H
 #define SEARCH_ENGINE_CONVERTERJSON_H
-
+//
 #pragma once
+//
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>

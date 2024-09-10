@@ -4,10 +4,11 @@
 
 #ifndef SEARCH_ENGINE_INVERTEDINDEX_H
 #define SEARCH_ENGINE_INVERTEDINDEX_H
-
+//
+#pragma once
+//
 #include <iostream>
 #include <vector>
-#include <map>
 
 struct Entry {
     size_t doc_id, count;
@@ -34,7 +35,7 @@ public:
 
 private:
     std::vector<std::string> docs; // список содержимого документов
-    std::map<std::string, std::vector<Entry>> freq_dictionary; // частотный словарь
+    //std::map<std::string, std::vector<Entry>> freq_dictionary; // частотный словарь
 };
 
 

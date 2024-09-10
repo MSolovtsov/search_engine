@@ -1,34 +1,34 @@
-#include <iostream>
 //
-#include "ConverterJSON.h"
-#include "InvertedIndex.h"
+// Created by mikha on 09.09.2024.
+//
+#include "gtest/gtest.h"
+//
 #include "SearchServer.h"
 
-int main() {
-
-    /*InvertedIndex index;
-    std::vector<std::string> text = ConverterJSON::GetTextDocuments();
-            //ConverterJSON::GetRequests();
-
-    if (!text.empty()) {
-        for (int i = 0; i < text.size(); i++) {
-            std::cout << i + 1 << ".\t" << text[i] << "\n\n\n\n" << std::endl;
-        }
-
-        index.UpdateDocumentBase(text);
-    } else
-        std::cout << "It's empty" << std::endl;
-
-    //std::cout << ConverterJSON::GetResponsesLimit();
-
-
-    std::cout << "\n\n\n\n" << std::endl;
-    std::vector<Entry> en_vec = index.GetWordCount("biba");
-
-    for (auto & i : en_vec){
-        std::cout << "{" << i.doc_id << ", " << i.count << "}" << std::endl;
-    }*/
-
+TEST(TestCaseSearchServer, TestSimple) {
+    const std::vector<std::string> docs = {
+            "milk milk milk milk water water water",
+            "milk water water",
+            "milk milk milk milk milk water water water water water",
+            "americano cappuccino"
+    };
+    const std::vector<std::string> request = {"milk water", "sugar"};
+    const std::vector<std::vector<RelativeIndex>> expected = {
+            {
+                    {2, 1},
+                    {0, 0.7},
+                    {1, 0.3}
+            },
+            {
+            }
+    };
+    InvertedIndex idx;
+    idx.UpdateDocumentBase(docs);
+    SearchServer srv(idx);
+    std::vector<std::vector<RelativeIndex>> result = srv.search(request);
+    ASSERT_EQ(result, expected);
+}
+TEST(TestCaseSearchServer, TestTop5) {
     const std::vector<std::string> docs = {
             "london is the capital of great britain",
             "paris is the capital of france",
@@ -63,15 +63,9 @@ int main() {
                     {2, 0.666666687}
             }
     };
-
-    std::vector<std::vector<Entry>> result;
     InvertedIndex idx;
     idx.UpdateDocumentBase(docs);
-
     SearchServer srv(idx);
-    srv.search(request);
-
-
-
-    return 0;
+    std::vector<std::vector<RelativeIndex>> result = srv.search(request);
+    ASSERT_EQ(result, expected);
 }
