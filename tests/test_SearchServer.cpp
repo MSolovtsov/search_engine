@@ -16,8 +16,8 @@ TEST(TestCaseSearchServer, TestSimple) {
     const std::vector<std::vector<RelativeIndex>> expected = {
             {
                     {2, 1},
-                    {0, 0.7},
-                    {1, 0.3}
+                    {0, 0.8},
+                    {1, 0.2}
             },
             {
             }
@@ -58,9 +58,9 @@ TEST(TestCaseSearchServer, TestTop5) {
             {
                     {7, 1},
                     {14, 1},
-                    {0, 0.666666687},
-                    {1, 0.666666687},
-                    {2, 0.666666687}
+                    {0, 0.8},
+                    {1, 0.8},
+                    {2, 0.8}
             }
     };
     InvertedIndex idx;

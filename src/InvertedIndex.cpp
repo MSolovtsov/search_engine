@@ -13,10 +13,6 @@ void InvertedIndex::UpdateDocumentBase(const std::vector<std::string>& input_doc
         docs.push_back(input_doc);
     }
 
-    //-------------- проверка
-    /*for (auto & doc : docs){
-        std::cout << doc << std::endl;
-    }*/
 }
 
 /* Метод определяет количество вхождений слова word в загруженной базе документов
@@ -48,16 +44,6 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string &word) {
                         entry.count++;
                 buf.clear();
             }
-
-            // Вариант 2
-            /*int count = 0;
-            for (int idx = 0; idx < word.size(); idx++){
-                count++;
-                if (docs[i][j+idx] != word[idx])
-                    break;
-            }
-            if (count == word.size())
-                entry.count++;*/
         }
 
         if (entry.count != 0) {
