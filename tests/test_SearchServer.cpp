@@ -25,7 +25,7 @@ TEST(TestCaseSearchServer, TestSimple) {
     InvertedIndex idx;
     idx.UpdateDocumentBase(docs);
     SearchServer srv(idx);
-    std::vector<std::vector<RelativeIndex>> result = srv.search(request);
+    std::vector<std::vector<RelativeIndex>> result = srv.search(request, 5);
     ASSERT_EQ(result, expected);
 }
 TEST(TestCaseSearchServer, TestTop5) {
@@ -66,6 +66,6 @@ TEST(TestCaseSearchServer, TestTop5) {
     InvertedIndex idx;
     idx.UpdateDocumentBase(docs);
     SearchServer srv(idx);
-    std::vector<std::vector<RelativeIndex>> result = srv.search(request);
+    std::vector<std::vector<RelativeIndex>> result = srv.search(request, 5);
     ASSERT_EQ(result, expected);
 }

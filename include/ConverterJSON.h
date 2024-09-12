@@ -12,6 +12,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <exception>
 
 /* Класс для работы с JSON-файлами */
 class ConverterJSON {
@@ -22,12 +23,9 @@ private:
     /* Функция проверяет корректность requests.json файла */
     static bool CheckRequests(const nlohmann::json& requestsJson);
 
-    /* Функция проверяет корректность answers.json файла */
-    static bool CheckAnswers(const nlohmann::json& answersJson);
-
     /* Метод считывает json из файла
      * @return Возвращает объект json */
-    static nlohmann::json CorrectOpenJson(bool is_config, bool is_requests);
+    static nlohmann::json CorrectOpenJson(bool is_config);
 
 public:
     ConverterJSON() = default;

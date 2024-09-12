@@ -22,7 +22,10 @@ std::vector<std::string> cutRequest(const std::string& request){
 /* Метод обработки поисковых запросов
 * @param queries_input поисковые запросы взятые из файла requests.json
 * @return возвращает отсортированный список релевантных ответов для заданных запросов */
-std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string> &queries_input) {
+std::vector<std::vector<RelativeIndex>> SearchServer::search(
+        const std::vector<std::string> &queries_input,
+        int limit_of_answers
+        ) {
 
     std::vector<std::vector<RelativeIndex>> result;
 
@@ -59,7 +62,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
 
                 rel_idx.push_back(idx);
             }
-            /// Отсортировать 1->0
+
             // Сортировка по рангу и id
             for (int j = rel_idx.size()-1; j >= 0; j--){
                 int max_j = 0;
@@ -80,9 +83,9 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
 
             this->freq_dictionary.clear();
         }
-        int limit = 5/*ConverterJSON::GetResponsesLimit()*/;  /// Можно изменить размер в main!
-        if (rel_idx.size() > limit){
-            rel_idx.resize(limit);
+        //int limit = 5/*ConverterJSON::GetResponsesLimit()*/;  /// Можно изменить размер в main!
+        if (rel_idx.size() > limit_of_answers){
+            rel_idx.resize(limit_of_answers);
         }
         result.push_back(rel_idx);
         rel_idx.clear();

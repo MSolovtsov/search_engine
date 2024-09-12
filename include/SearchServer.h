@@ -8,7 +8,6 @@
 #pragma once
 //
 #include <map>
-//#include "ConverterJSON.h"
 #include "InvertedIndex.h"
 
 
@@ -30,7 +29,7 @@ public:
     /* Метод обработки поисковых запросов
     * @param queries_input поисковые запросы взятые из файла requests.json
     * @return возвращает отсортированный список релевантных ответов для заданных запросов */
-    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
+    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input, int limit_of_answers);
 
 private:
     InvertedIndex _index;
