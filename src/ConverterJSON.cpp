@@ -45,7 +45,28 @@ bool ConverterJSON::CheckConfig(const nlohmann::json& configJson){
 /* Функция проверяет корректность requests.json файла */
 bool ConverterJSON::CheckRequests(const nlohmann::json& requestsJson){
 
-    /// CODE
+    std::vector<std::string> req = requestsJson["requests"];
+    int requests = req.size();
+
+    if(requests > 1000) {
+        std::cerr << "there are too many requests\n"
+                     "there should be no more than 1000 requests" << std::endl;
+        return false;
+    }
+
+    for (int j = 0; j < requests; j++){
+        int words = 0;
+        for (int i = 0; i <= req[j].size(); i++) {
+            if (req[j][i] <= 96 || req[j][i] >= 123)
+                words++;
+
+            if (words > 10) {
+                std::cerr << "there are too many words in request\n"
+                             "there should be no more than 10 words" << std::endl;
+                return false;
+            }
+        }
+    }
 
     return true;
 }
@@ -58,8 +79,11 @@ nlohmann::json ConverterJSON::CorrectOpenJson(bool is_config){
     std::string nameFile = (is_config) ?
                            ("config.json") :  ("requests.json");
 
-    //TODO Исправить костыль!!
-    std::string path = R"(..\..\json\)" + nameFile;
+    // Получаем текущий файл (исходный файл .cpp)
+    std::filesystem::path current_file = __FILE__;
+    std::filesystem::path output_file("..\\json\\" + nameFile);
+    // Получаем директорию, в которой находится текущий файл
+    std::filesystem::path path = current_file.parent_path() / output_file;
 
     file.open(path);
     if (file.is_open()) {
@@ -87,8 +111,13 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
     if (configFileJson != nullptr) {
         for (auto &i: configFileJson["files"]) {
             std::ifstream textFile;
-            // TODO Исправить костыль
-            textFile.open(i);
+            // Получаем текущий файл (исходный файл .cpp)
+            std::filesystem::path current_file = __FILE__;
+            std::filesystem::path output_file(i);
+            // Получаем директорию, в которой находится текущий файл
+            std::filesystem::path path = current_file.parent_path() / output_file;
+
+            textFile.open(path);
             if (textFile.is_open()) {
                 std::string text;
                 std::getline(textFile, text);
@@ -168,9 +197,17 @@ void ConverterJSON::putAnswers(const std::vector<std::vector<std::pair<int, floa
         }
     }
 
-    std::ofstream file(R"(..\..\json\answers.json)");
-    file << answer_json;
-    file.close();
+    // Получаем текущий файл (исходный файл .cpp)
+    std::filesystem::path current_file = __FILE__;
+    // Получаем директорию, в которой находится текущий файл
+    std::filesystem::path path = current_file.parent_path() / "..\\json\\answers.json";
+
+    std::ofstream file(path);
+    if(file.is_open()) {
+        file << answer_json;
+        file.close();
+    } else
+        std::cerr << "answers.json file is missing." << std::endl;
 
 }
 

@@ -13,10 +13,12 @@
 #include <fstream>
 #include <vector>
 #include <exception>
+#include <filesystem>
 
 /* Класс для работы с JSON-файлами */
 class ConverterJSON {
 private:
+
     /* Функция проверяет корректность config.json файла */
     static bool CheckConfig(const nlohmann::json& configJson);
 
