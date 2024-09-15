@@ -23,20 +23,20 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string &word) {
     const auto count = word.size();
 
     // Проверяем каждый текст
-    for (int i = 0; i < docs.size(); i++){
+    for (int i = 0; i < this->docs.size(); i++){
         Entry entry{};
         entry.count = 0;
         std::string buf;
         buf.clear();
 
         // Проверяем внутри текста
-        for (int j = 0; j <= docs[i].size(); j++){
+        for (int j = 0; j <= this->docs[i].size(); j++){
             // Вариант 1
             /* Тз: При этом каждый документ содержит не более
             * 1000 слов с максимальной длиной каждого в 100 символов. Слова
             * состоят из строчных латинских букв и разделены одним или несколькими
             * пробелами */
-            if (docs[i][j] > 96 && docs[i][j] < 123){
+            if (this->docs[i][j] > 96 && this->docs[i][j] < 123){
                 buf += docs[i][j];
             } else {
                 if (buf.size() == count)

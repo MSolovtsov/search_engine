@@ -8,12 +8,13 @@
 #pragma once
 //
 #include <iostream>
-#include <nlohmann/json.hpp>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <exception>
 #include <filesystem>
+//
+#include <nlohmann/json.hpp>
 
 /* Класс для работы с JSON-файлами */
 class ConverterJSON {

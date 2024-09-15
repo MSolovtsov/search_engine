@@ -19,6 +19,8 @@ std::vector<std::string> cutRequest(const std::string& request){
     return words;
 }
 
+
+
 /* Метод обработки поисковых запросов
 * @param queries_input поисковые запросы взятые из файла requests.json
 * @return возвращает отсортированный список релевантных ответов для заданных запросов */
@@ -29,21 +31,36 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(
 
     std::vector<std::vector<RelativeIndex>> result;
 
+    // Проходим по каждому запросу
     for (const auto & i : queries_input){
         std::vector<std::string> req = cutRequest(i);
+        std::vector<std::thread> threads;
+        std::mutex threads_access;
+        std::mutex word_access;
 
-        for (auto & j : req){
-            /// Потоки -->
-
-            std::vector<Entry> buf;
-            buf = this->_index.GetWordCount(j);
-            this->freq_dictionary.insert(std::pair<std::string, std::vector<Entry>>(j, buf));
-            buf.clear();
+        // Проходим по каждому слову в запросе
+        for (const auto & j : req) {
+            // Потоки -->
+            threads.emplace_back([&j, this, &word_access, &threads_access]() {
+                word_access.lock();
+                std::string keyword = j;
+                word_access.unlock();
+                std::vector<Entry> buf;
+                buf = this->_index.GetWordCount(keyword/*j*/);
+                threads_access.lock();
+                this->freq_dictionary.insert(std::pair<std::string, std::vector<Entry>>(keyword/*j*/, buf));
+                threads_access.unlock();
+                buf.clear();
+            });
         }
-        /// <--
+
+        // <--
+        for (auto & thread : threads){
+            if(thread.joinable()) thread.join();
+        }
 
         std::vector<RelativeIndex> rel_idx;
-        std::vector<Entry> bufCount = numberOfMatches(this->freq_dictionary);
+        std::vector<Entry> bufCount = GetNumberOfMatches(this->freq_dictionary);
 
         if (!bufCount.empty()) {
             // Максимальное число повторений
@@ -83,7 +100,6 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(
 
             this->freq_dictionary.clear();
         }
-        //int limit = 5/*ConverterJSON::GetResponsesLimit()*/;  /// Можно изменить размер в main!
         if (rel_idx.size() > limit_of_answers){
             rel_idx.resize(limit_of_answers);
         }
@@ -91,14 +107,6 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(
         rel_idx.clear();
 
     }
-    // Прверка
-    /*for (int k = 0; k < result.size(); k++){
-        std::cout << "{" << std::endl;
-        for (int h = 0; h < result[k].size(); h++){
-            std::cout << "\t{" << result[k][h].doc_id << ", " << result[k][h].rank << "}"<< std::endl;
-        }
-        std::cout << "}" << std::endl;
-    }*/
 
     return result;
 }
@@ -107,7 +115,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(
 * @param map_input пробигается по каждому значению-вектору, сравнивает,
 * есть ли doc_id в векторе bufCount, если есть суммирует count, если нет, добавляет в вектор
 * @return возвращает отсортированный список количества совпадений */
-std::vector<Entry> SearchServer::numberOfMatches(std::map<std::string, std::vector<Entry>>& map_input) {
+std::vector<Entry> SearchServer::GetNumberOfMatches(std::map<std::string, std::vector<Entry>>& map_input) {
     std::vector<Entry> result;
     // пробегает по ключу freq_dictionary
     for (auto & it : map_input){
@@ -115,7 +123,6 @@ std::vector<Entry> SearchServer::numberOfMatches(std::map<std::string, std::vect
         if (!result.empty()){
             // Пробигает по вектору-значению
             for (auto & j : it.second){
-                /// Потоки -->
                 bool thereIs = false;
 
                 for (auto & k : result){
@@ -127,7 +134,6 @@ std::vector<Entry> SearchServer::numberOfMatches(std::map<std::string, std::vect
                 if (!thereIs){
                     result.push_back(j);
                 }
-                /// <--
             }
         } else
             result = it.second;
