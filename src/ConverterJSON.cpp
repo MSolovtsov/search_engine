@@ -79,11 +79,10 @@ nlohmann::json ConverterJSON::CorrectOpenJson(bool is_config){
     std::string nameFile = (is_config) ?
                            ("config.json") :  ("requests.json");
 
-    // Получаем текущий файл (исходный файл .cpp)
-    std::filesystem::path current_file = __FILE__;
+    std::filesystem::path current_file = std::filesystem::current_path().parent_path();
     std::filesystem::path output_file("..\\json\\" + nameFile);
     // Получаем директорию, в которой находится текущий файл
-    std::filesystem::path path = current_file.parent_path() / output_file;
+    std::filesystem::path path = current_file / output_file;
 
     file.open(path);
     if (file.is_open()) {
@@ -111,11 +110,11 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
     if (configFileJson != nullptr) {
         for (auto &i: configFileJson["files"]) {
             std::ifstream textFile;
-            // Получаем текущий файл (исходный файл .cpp)
-            std::filesystem::path current_file = __FILE__;
+
+            std::filesystem::path current_file = std::filesystem::current_path().parent_path();
             std::filesystem::path output_file(i);
             // Получаем директорию, в которой находится текущий файл
-            std::filesystem::path path = current_file.parent_path() / output_file;
+            std::filesystem::path path = current_file / output_file;
 
             textFile.open(path);
             if (textFile.is_open()) {
@@ -197,10 +196,13 @@ void ConverterJSON::putAnswers(const std::vector<std::vector<std::pair<int, floa
         }
     }
 
-    // Получаем текущий файл (исходный файл .cpp)
+    /*// Получаем текущий файл (исходный файл .cpp)
     std::filesystem::path current_file = __FILE__;
     // Получаем директорию, в которой находится текущий файл
-    std::filesystem::path path = current_file.parent_path() / "..\\json\\answers.json";
+    std::filesystem::path path = current_file.parent_path() / "..\\json\\answers.json";*/
+
+    std::filesystem::path current_file = std::filesystem::current_path().parent_path();
+    std::filesystem::path path = current_file / "..\\json\\answers.json";
 
     std::ofstream file(path);
     if(file.is_open()) {
