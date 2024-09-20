@@ -12,6 +12,6 @@ set(MY_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/)
 set(MY_SRC_DIR ${CMAKE_SOURCE_DIR}/src/)
 
 add_subdirectory(src)
-add_subdirectory(tests)
+add_subdirectory(test)
 
 target_link_libraries(search_engine PRIVATE nlohmann_json::nlohmann_json)

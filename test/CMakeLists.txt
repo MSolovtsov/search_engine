@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 enable_testing()
-add_subdirectory(googletest)
+add_subdirectory(googletest-main)
 
 
 add_executable(search_engine_test
