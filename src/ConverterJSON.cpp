@@ -79,12 +79,7 @@ nlohmann::json ConverterJSON::CorrectOpenJson(bool is_config){
     std::string nameFile = (is_config) ?
                            ("config.json") :  ("requests.json");
 
-    std::filesystem::path current_file = std::filesystem::current_path().parent_path();
-    std::filesystem::path output_file("..\\json\\" + nameFile);
-    // Получаем директорию, в которой находится текущий файл
-    std::filesystem::path path = current_file / output_file;
-
-    file.open(path);
+    file.open("../json/" + nameFile);
     if (file.is_open()) {
         file >> fileJson;
         file.close();
@@ -111,12 +106,7 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
         for (auto &i: configFileJson["files"]) {
             std::ifstream textFile;
 
-            std::filesystem::path current_file = std::filesystem::current_path().parent_path();
-            std::filesystem::path output_file(i);
-            // Получаем директорию, в которой находится текущий файл
-            std::filesystem::path path = current_file / output_file;
-
-            textFile.open(path);
+            textFile.open(i);
             if (textFile.is_open()) {
                 std::string text;
                 std::getline(textFile, text);
@@ -129,7 +119,7 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
                 }
                 textFile.close();
             } else {
-                std::cerr << "file " << i << " is not open." << std::endl;
+                std::cerr << "file " << i << " is not found." << std::endl;
                 textDocs.emplace_back();
             }
         }
@@ -196,15 +186,7 @@ void ConverterJSON::putAnswers(const std::vector<std::vector<std::pair<int, floa
         }
     }
 
-    /*// Получаем текущий файл (исходный файл .cpp)
-    std::filesystem::path current_file = __FILE__;
-    // Получаем директорию, в которой находится текущий файл
-    std::filesystem::path path = current_file.parent_path() / "..\\json\\answers.json";*/
-
-    std::filesystem::path current_file = std::filesystem::current_path().parent_path();
-    std::filesystem::path path = current_file / "..\\json\\answers.json";
-
-    std::ofstream file(path);
+    std::ofstream file("../json/answers.json");
     if(file.is_open()) {
         file << answer_json;
         file.close();
